@@ -1,0 +1,35 @@
+type Mutation {
+  signIn(
+    signInArgs: SignInInput!
+  ): SignInOutput
+}
+
+type Mutation {
+  signUp(
+    signUpArgs: SignupInput!
+  ): SignupOutput
+}
+
+input SignInInput {
+  username: String!
+  password: String!
+}
+
+input SignupInput {
+  username: String!
+  password: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+}
+
+type SignInOutput {
+  accessToken: String!
+  userId: uuid
+}
+
+type SignupOutput {
+  accessToken: String!
+  userId: uuid
+}
+

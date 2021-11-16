@@ -1,0 +1,15 @@
+mutation CreateUser($email: String!, $firstName: String!, $lastName: String!, $password: String!, $username: String!) {
+    insert_auth_one(object: {email: $email, firstName: $firstName, lastName: $lastName, password: $password, username: $username}) {
+        email
+        firstName
+        lastName
+        id
+        username
+    }
+}
+
+#mutation CreateRefreshTokens($user: uuid!, $exp_at: timestamptz!) {
+#    insert_refresh_tokens_one(object: {user: $user, exp_at: $exp_at}) {
+#        id
+#    }
+#}

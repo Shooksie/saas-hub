@@ -1,0 +1,23 @@
+query GetUserInfo($id: uuid) {
+    auth(where: {id: {_eq: $id}}) {
+        email
+        firstName
+        lastName
+        created_at
+        updated_at
+    }
+}
+
+query GetUserByUserNameOrEmail($username: String!) {
+    checkusername(args: {username: $username}) {
+        created_at
+        email
+        firstName
+        id
+        lastName
+        password
+        updated_at
+        username
+    }
+}
+
