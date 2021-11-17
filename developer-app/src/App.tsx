@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { PropsWithChildren, useRef, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -6,10 +6,19 @@ import RGL, { WidthProvider, Layout } from "react-grid-layout";
 import "./App.css";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-
+import { Button } from "./Grid/Components/button";
+import { Input } from "./Grid/Components/input";
+import { Title } from "./Grid/Components/Title";
+import { Grid } from "./Grid/Grid";
 const GridLayout = WidthProvider(RGL);
 
 const layout: Layout[] = [];
+
+const EditableComponent = ({
+  children,
+}: PropsWithChildren<{ options?: any }>) => {
+  return <div className="flex-wrapper">{children}</div>;
+};
 
 const Component = () => {
   const [clickActive, setClickActive] = useState(false);
@@ -19,7 +28,8 @@ const Component = () => {
       onMouseEnter={() => {
         setClickActive(true);
       }}
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         setClickActive(true);
       }}
     >
@@ -112,12 +122,27 @@ const GridItemsMap: { [key: string]: FactoryItem } = {
     key: "Form",
     Component: Form,
   },
+  Button: {
+    key: "Button",
+    Component: Button,
+  },
+  Input: {
+    key: "Input",
+    Component: Input,
+  },
+  Title: {
+    key: "Title",
+    Component: Title,
+  },
 };
 
 const GridItemsList = [
   GridItemsMap.Card,
   GridItemsMap.Table,
   GridItemsMap.Form,
+  GridItemsMap.Button,
+  GridItemsMap.Input,
+  GridItemsMap.Title,
 ];
 
 const GridItemFactory = (id: string) => {
@@ -134,25 +159,12 @@ const GridItemFactory = (id: string) => {
 
   return <div>{id}</div>;
 };
+
 function App() {
   const [items, setItems] = useState<Layout[]>(layout);
+  const [draggingType, setDraggingType] = useState<string>();
 
   console.log(items);
-  const draggingType = useRef<string>();
-
-  const onDrop = (layout: any, layoutItem: any, _event: any) => {
-    console.log(layout, layoutItem, _event);
-
-    if (draggingType.current) {
-      setItems((items) => {
-        return [
-          ...items,
-          { ...layoutItem, i: `${draggingType.current}_${uuidv4()}` },
-        ];
-      });
-      draggingType.current = undefined;
-    }
-  };
 
   return (
     <div className="App d-flex">
@@ -171,7 +183,7 @@ function App() {
                 // @see https://bugzilla.mozilla.org/show_bug.cgi?id=568313
                 onDragStart={(e) => {
                   e.dataTransfer.setData("text/plain", "Card");
-                  draggingType.current = item.key;
+                  setDraggingType(item.key);
                 }}
               >
                 <div>
@@ -182,31 +194,11 @@ function App() {
           })}
         </div>
         <div className="col-9 bg-light">
-          <GridLayout
-            droppingItem={{ i: "__droppable__", w: 4, h: 6 }}
-            className="layout"
-            layout={items}
-            cols={12}
-            onDrop={onDrop}
-            rowHeight={30}
-            // droppingItem={{ i: uuidv4(), w: 6, h: 10 }}
-            onLayoutChange={(newL) => {
-              console.log(newL);
-              if (!newL.find((item) => item.i === "__droppable__")) {
-                setItems(newL);
-              }
-            }}
-            // onDropDragOver={(e) => {
-            //   console.log(e);
-            //   return { w: 5, h: 5 };
-            // }}
-            isDraggable
-            isDroppable
-          >
+          <Grid items={items} setItems={setItems} draggingType={draggingType}>
             {items.map((item) => {
               return <div key={item.i}>{GridItemFactory(item.i)}</div>;
             })}
-          </GridLayout>
+          </Grid>
         </div>
       </div>
     </div>
