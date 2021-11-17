@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth
+  name: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - env:
+            - name: DEBUG
+              value: "nodejs-docker-express:*"
+            - name: NODE_ENV
+              value: "development"
+          image: asaifee02/auth:latest
+          name: auth
+          ports:
+            - containerPort: 3999
+      restartPolicy: Always

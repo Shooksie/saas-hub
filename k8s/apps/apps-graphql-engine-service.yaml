@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: apps-graphql-engine
+  name: apps-graphql-engine
+spec:
+  ports:
+    - name: graphql
+      port: 8083
+      targetPort: 8080
+  selector:
+    app: apps-graphql-engine

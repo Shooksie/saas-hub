@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: storage-graphql-engine
+  name: storage-graphql-engine
+spec:
+  ports:
+    - name: graphql
+      port: 8084
+      targetPort: 8080
+  selector:
+    app: storage-graphql-engine
