@@ -5,6 +5,7 @@ metadata:
     app: storage-graphql-engine
   name: storage-graphql-engine
 spec:
+  type: LoadBalancer
   ports:
     - name: graphql
       port: 8084

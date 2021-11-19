@@ -5,6 +5,7 @@ metadata:
     app: apps-graphql-engine
   name: apps-graphql-engine
 spec:
+  type: LoadBalancer
   ports:
     - name: graphql
       port: 8083
