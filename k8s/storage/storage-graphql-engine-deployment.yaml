@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: storage-graphql-engine
+  name: storage-graphql-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storage-graphql-engine
+  template:
+    metadata:
+      labels:
+        app: storage-graphql-engine
+    spec:
+      containers:
+        - env:
+            - name: HASURA_GRAPHQL_ADMIN_SECRET
+              value: "admin-secret"
+            - name: HASURA_GRAPHQL_DEV_MODE
+              value: "true"
+            - name: HASURA_GRAPHQL_ENABLED_LOG_TYPES
+              value: "startup, http-log, webhook-log, websocket-log, query-log"
+            - name: HASURA_GRAPHQL_ENABLE_CONSOLE
+              value: "true"
+            - name: HASURA_GRAPHQL_JWT_SECRET
+              value: '{ "key": "sdkfjhsdkjhfsadkjhfgfhgfhgfhgfhg", "type": "HS256" }'
+            - name: HASURA_GRAPHQL_METADATA_DATABASE_URL
+              value: "postgres://postgres:postgrespassword@storage-postgres:5432/postgres"
+            - name: HASURA_GRAPHQL_UNAUTHORIZED_ROLE
+              value: "guest"
+            - name: PG_DATABASE_URL
+              value: "postgres://postgres:postgrespassword@storage-postgres:5432/postgres"
+          image: hasura/graphql-engine:v2.0.10
+          name: storage-graphql-engine
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
